@@ -1,0 +1,134 @@
+# SwiftLint Configuration for Rowing Performance Tracker iOS App
+# Based on coding standards defined in docs/architecture/coding-standards.md
+
+# Opt-in Rules (explicitly enable these additional rules)
+opt_in_rules:
+  - empty_count                    # Prefer isEmpty over count == 0
+  - trailing_newline               # Files should have trailing newlines
+  - colon                         # Colons should be next to identifier
+  - comma                         # Commas should be next to identifier
+  - closure_spacing               # Closure expressions should have single space inside
+  - empty_string                  # Prefer isEmpty over == ""
+  - fatal_error_message           # Fatal error call should have a message
+  - first_where                   # Prefer using .first(where:) over .filter { }.first
+  - force_unwrapping              # Force unwrapping should be avoided (CRITICAL)
+  - implicit_return               # Prefer implicit returns in closures
+  - multiline_arguments           # Arguments should be on same line or one per line
+  - multiline_parameters          # Parameters should be on same line or one per line
+  - operator_usage_whitespace     # Operators should be surrounded by whitespace
+  - overridden_super_call         # Some overridden methods should call super
+  - redundant_nil_coalescing      # nil coalescing operator is redundant
+  - redundant_type_annotation     # Variables should not have redundant type annotation
+  - sorted_first_last             # Prefer using min() or max() over sorted().first or sorted().last
+  - syntactic_sugar               # Shorthand syntactic sugar should be used
+  - toggle_bool                   # Prefer someBool.toggle() over someBool = !someBool
+  - unneeded_parentheses_in_closure_argument # Parentheses are not needed in closure arguments
+  - vertical_whitespace_closing_braces # Closing braces should not have vertical whitespace before them
+  - vertical_whitespace_opening_braces # Opening braces should not have vertical whitespace after them
+  - static_over_final_class       # Prefer static over class in final classes
+
+# Disabled Rules (turn off these default rules)
+disabled_rules:
+  - trailing_whitespace           # We handle this with editor settings
+  - todo                         # TODOs are acceptable during development
+
+# Custom Rule Configuration
+
+# Line Length
+line_length:
+  warning: 120                   # Warn at 120 characters
+  error: 140                     # Error at 140 characters
+  ignores_function_declarations: true
+  ignores_comments: true
+  ignores_urls: true
+
+# Identifier Names
+identifier_name:
+  min_length:
+    warning: 3                   # Minimum 3 characters
+    error: 2                     # Error below 2 characters
+  max_length:
+    warning: 40                  # Maximum 40 characters
+    error: 50                    # Error above 50 characters
+  excluded:                      # Allow these short names
+    - id
+    - x
+    - y
+    - z
+    - pm
+    - hr                         # Heart rate
+    - i                          # Loop counters
+
+# Type Name
+type_name:
+  min_length: 3                  # Types should be at least 3 characters
+  max_length: 40                 # Types should not exceed 40 characters
+  excluded:                      # Allow existing d_n_w naming convention
+    - d_n_wApp
+    - d_n_wTests
+    - d_n_wUITests
+    - d_n_wUITestsLaunchTests
+
+# Function Length
+function_body_length:
+  warning: 60                    # Warn at 60 lines
+  error: 100                     # Error at 100 lines
+
+# File Length
+file_length:
+  warning: 400                   # Warn at 400 lines
+  error: 1000                    # Error at 1000 lines
+
+# Type Body Length
+type_body_length:
+  warning: 200                   # Warn at 200 lines
+  error: 350                     # Error at 350 lines
+
+# Cyclomatic Complexity
+cyclomatic_complexity:
+  warning: 10                    # Warn at complexity 10
+  error: 20                      # Error at complexity 20
+
+# Nesting Depth
+nesting:
+  type_level:
+    warning: 1                   # Warn at 1 level of nested types
+
+# Large Tuple
+large_tuple:
+  warning: 3                     # Warn at 3 tuple elements
+  error: 4                       # Error at 4 tuple elements
+
+# Custom Rules for PM5/Bluetooth Development
+custom_rules:
+
+  # Note: Using built-in force_unwrapping rule instead of custom regex
+  # to avoid false positives with logical NOT operator
+
+  # Prevent console.log equivalent (print statements in production)
+  no_print_statements:
+    name: "No Print Statements"
+    regex: '^(?!.*//.*print).*print\('
+    message: "Use logger instead of print statements for production code"
+    severity: warning
+    excluded: ".*Tests.*" # Allow prints in test files
+
+# File Exclusions
+excluded:
+  - Carthage
+  - Pods
+  - .build
+  - .swiftpm
+  - Package.swift
+  - "**/*Generated*"
+  - DerivedData
+  - "**/*.generated.swift"
+
+# Include additional paths
+included:
+  - d_n_w
+  - d_n_wTests
+  - d_n_wUITests
+
+# Reporter
+reporter: "xcode" # Use Xcode-compatible output format

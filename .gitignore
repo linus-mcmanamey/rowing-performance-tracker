@@ -11,21 +11,110 @@ claude_desktop_config.json
 
 # macOS
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
-# Xcode
+# iOS / Xcode
 *.xcuserstate
+*.xcuserdatad/
 *.xcworkspace/xcuserdata/
 DerivedData/
 .build/
+build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+timeline.xctimeline
+playground.xcworkspace
+.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+*.xcscmblueprint
+*.xccheckout
+Carthage/Build/
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+iOSInjectionProject/
 
 # Swift Package Manager
 .swiftpm/
 Package.resolved
+Packages/
+xcuserdata/
+.netrc
 
-# Node modules (if backend is added later)
+# Node.js / NPM
 node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.npmrc
+package-lock.json
+yarn.lock
+.pnp
+.pnp.js
+coverage/
+.nyc_output
+.grunt
+bower_components
+jspm_packages/
+typings/
+.vuepress/dist
+.serverless/
+.FuseBox/
+.dynamodb/
+.tern-port
+
+# IDE / Editors
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.swp
+*.swo
+*~
+.idea/
+*.sublime-project
+*.sublime-workspace
+.vim/
+.history/
+*.tmp
+*.temp
 
 # Build outputs
 *.ipa
 *.dSYM
 *.app
+dist/
+*.tgz
+*.tar.gz
+
+# Testing
+*.coverage
+.coverage
+htmlcov/
+.tox/
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Environment files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
