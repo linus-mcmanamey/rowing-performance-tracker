@@ -547,6 +547,120 @@ func parseWorkoutMetrics(from data: Data) throws -> WorkoutMetrics {
 - Use lazy loading for large data sets
 - Implement proper list virtualization for workout history
 
+## Code Quality Gates - Linting Requirements
+
+### MANDATORY LINTING COMPLIANCE
+
+**CRITICAL REQUIREMENT:** No code can be marked as "Done", "Complete", or "Ready for Review" without passing linting checks.
+
+### Linting Configuration
+
+All iOS code MUST comply with the SwiftLint configuration at `ios-app/.swiftlint.yml`. This configuration enforces:
+
+- **Code Complexity:** Maximum cyclomatic complexity of 10
+- **File Organization:** Maximum 400 lines per file, 200 lines per type
+- **Naming Standards:** Consistent identifier and type naming
+- **Safety Rules:** No force unwrapping, no print statements in production
+- **Code Quality:** Proper whitespace, syntax sugar usage, and modern Swift patterns
+
+### Definition of Done - Linting Checklist
+
+**Before ANY story, task, or code change can be marked complete:**
+
+1. **✅ Zero Linting Errors:** Code must have ZERO error-level violations
+   ```bash
+   swiftlint lint --strict  # Must pass with exit code 0
+   ```
+
+2. **✅ Minimal Warnings:** Maximum 5 warning-level violations per file
+   ```bash
+   swiftlint lint --reporter json | jq '.[] | select(.severity=="Warning")' | wc -l
+   ```
+
+3. **✅ Documentation:** All linting suppressions must be documented
+   ```swift
+   // swiftlint:disable:next line force_unwrapping
+   // Reason: API guarantees non-nil response after successful authentication
+   let token = response.authToken!
+   ```
+
+### Linting Workflow Integration
+
+**Developer Workflow:**
+1. **Pre-Commit:** Run `swiftlint lint` locally before committing
+2. **Pre-Push:** Run `swiftlint lint --strict` before pushing
+3. **Pre-Review:** Include linting report in PR description
+4. **Pre-Done:** QA must verify linting compliance
+
+**AI Agent Workflow:**
+1. **During Development:** Run linting after each file modification
+2. **Before Task Completion:** Execute full linting validation
+3. **In Story Completion:** Include linting report in Dev Agent Record
+4. **QA Validation:** QA Agent must verify zero errors, acceptable warnings
+
+### Linting Violation Resolution
+
+**If linting violations exist:**
+
+1. **Refactor First:** Always attempt to refactor code to comply
+2. **Split Large Files:** Break down files exceeding size limits into logical components
+3. **Reduce Complexity:** Extract methods, use guard statements, simplify logic
+4. **Suppress Sparingly:** Only disable rules with documented justification
+
+**Acceptable Suppressions (with documentation):**
+- Legacy code migration (temporary)
+- Third-party SDK requirements
+- Performance-critical sections (benchmarked)
+
+**Unacceptable Suppressions:**
+- Convenience or laziness
+- "Will fix later" without tracked ticket
+- Suppressing safety rules (force_unwrapping, implicitly_unwrapped_optional)
+
+### Enforcement Mechanisms
+
+**Automated Enforcement:**
+```yaml
+# CI/CD Pipeline (Story 1.2 requirement)
+- name: SwiftLint Check
+  run: |
+    swiftlint lint --strict --reporter junit > linting-report.xml
+    if [ $? -ne 0 ]; then
+      echo "❌ Linting failed - Story cannot be marked as Done"
+      exit 1
+    fi
+```
+
+**Manual Enforcement:**
+- **Developer:** Cannot mark story as "Ready for Review" with linting errors
+- **QA:** Must reject stories with unresolved linting violations
+- **Scrum Master:** Cannot create next story if previous has linting debt
+- **Product Owner:** Cannot accept story with linting violations
+
+### Progressive Linting Adoption
+
+**For Existing Code (Brownfield):**
+1. **Phase 1:** Fix all errors (mandatory)
+2. **Phase 2:** Reduce warnings to <10 per file
+3. **Phase 3:** Achieve full compliance
+
+**For New Code (Greenfield):**
+- **100% compliance from day one**
+- **Zero tolerance for new violations**
+
+### Linting Metrics Tracking
+
+**Track in Dev Agent Record:**
+```markdown
+### Linting Compliance Report
+- Files Analyzed: 11
+- Errors: 0 ✅
+- Warnings: 3 (acceptable - documented)
+- Suppressed Rules: 1 (force_unwrapping - line 234 - API guarantee)
+- SwiftLint Version: 0.54.0
+- Compliance Status: PASSED ✅
+```
+
 ## Compliance & Enforcement
 
 **Automated Checks:**
