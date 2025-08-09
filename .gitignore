@@ -1,0 +1,31 @@
+# Environment and configuration files
+.env
+claude_desktop_config.json
+
+# Development tools and local config
+.bmad-core/
+.claude/
+
+# Logs
+*.log
+
+# macOS
+.DS_Store
+
+# Xcode
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+DerivedData/
+.build/
+
+# Swift Package Manager
+.swiftpm/
+Package.resolved
+
+# Node modules (if backend is added later)
+node_modules/
+
+# Build outputs
+*.ipa
+*.dSYM
+*.app
