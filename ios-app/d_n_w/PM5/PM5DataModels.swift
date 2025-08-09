@@ -12,7 +12,7 @@ struct GeneralStatus {
     let elapsedTime: TimeInterval  // seconds (from 0.01s LSB)
     let distance: Double           // meters (from 0.1m LSB)
     let workoutType: WorkoutType
-    let intervalType: IntervalType
+    let intervalType: IntervalType?
     let workoutState: WorkoutState
     let rowingState: RowingState
     let strokeState: StrokeState
@@ -129,7 +129,11 @@ struct PM5RowingData {
     var additionalStrokeData: AdditionalStrokeData?
     var splitIntervalData: SplitIntervalData?
     var heartRateBeltInfo: HeartRateBeltInfo?
-    var lastUpdate = Date()
+    var lastUpdate: Date?
+    
+    init() {
+        self.lastUpdate = nil
+    }
 }
 
 // MARK: - Utility Extensions

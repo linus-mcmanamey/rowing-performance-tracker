@@ -1,6 +1,6 @@
 # Epic 5: Team Management & Historical Analytics
 
-Enable comprehensive team organization and historical performance analysis. This epic completes the MVP by providing coaches with team management tools and both coaches and athletes with access to historical performance data for tracking progress over time.
+Enable comprehensive team organization and historical performance analysis through SwiftData + CloudKit shared databases. This epic completes the MVP by providing coaches with native iOS team management tools and both coaches and athletes with access to historical performance data for tracking progress over time.
 
 ## Story 5.1: Team and Roster Management
 
@@ -9,16 +9,16 @@ I want to manage my team roster and organization,
 so that athletes are properly grouped and tracked.
 
 ### Acceptance Criteria
-1: Create/edit/delete teams with name and description
-2: Add athletes to teams via email invitation
-3: Assign coaches to teams with permissions
-4: Team hierarchy (varsity, JV, novice)
-5: Athlete profiles with basic info
-6: Bulk import from CSV
-7: Active/inactive status for athletes
-8: Transfer athletes between teams
-9: Team access codes for self-registration
-10: View team member list with roles
+1: Create/edit/delete teams using SwiftData Team models
+2: Add athletes via CloudKit record sharing invitations
+3: Assign coaches via CloudKit shared database participants
+4: Team hierarchy using SwiftData relationships
+5: Athlete profiles stored in SwiftData with CloudKit sync
+6: Bulk import from CSV into SwiftData models
+7: Active/inactive status via SwiftData boolean properties
+8: Transfer athletes via CloudKit record sharing updates
+9: Team access via CloudKit record sharing links
+10: View team member list with CloudKit participant roles
 
 ## Story 5.2: Historical Session Browser
 
@@ -27,15 +27,15 @@ I want to browse and search past rowing sessions,
 so that I can review performance history.
 
 ### Acceptance Criteria
-1: Session list with date, duration, distance
-2: Filter by date range
-3: Filter by athlete (coaches see all, athletes see own)
-4: Search by session notes/tags
-5: Sort by various metrics
-6: Infinite scroll for large result sets
-7: Quick stats summary at top
-8: Favorite sessions for quick access
-9: Session comparison selector
+1: SwiftUI List with SwiftData @Query for sessions
+2: Filter by date range using @Query predicates
+3: Filter by athlete using CloudKit permissions (coaches see shared data)
+4: Search by session notes using SwiftData text search
+5: Sort by various metrics using @Query sort descriptors
+6: LazyVStack for large result sets with SwiftData pagination
+7: Quick stats summary using SwiftData aggregate queries
+8: Favorite sessions using SwiftData boolean property
+9: Session comparison using SwiftData multi-selection
 
 ## Story 5.3: Individual Session Analysis
 

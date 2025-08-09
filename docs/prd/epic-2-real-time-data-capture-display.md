@@ -30,8 +30,8 @@ so that I can monitor my metrics while rowing.
 3: Buffer system for smooth data flow despite BLE irregularities
 4: Efficient data structures to minimize memory usage
 5: Background BLE handling for iOS multitasking
-6: Network data streaming to backend implemented
-7: Local data caching during network outages
+6: SwiftData persistence for real-time metrics storage
+7: CloudKit background sync without blocking real-time UI
 8: Performance profiling confirms 60fps UI updates
 
 ## Story 2.3: Athlete Performance Dashboard UI

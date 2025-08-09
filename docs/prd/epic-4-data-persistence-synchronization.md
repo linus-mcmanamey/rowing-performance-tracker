@@ -1,23 +1,23 @@
 # Epic 4: Data Persistence & Synchronization
 
-Implement reliable data storage in the cloud with offline capabilities and automatic synchronization. This epic ensures no training data is lost and provides the foundation for historical analysis and progress tracking.
+Implement SwiftData + CloudKit architecture for reliable local storage with automatic cloud synchronization and offline capabilities. This epic ensures no training data is lost and provides the foundation for historical analysis and progress tracking through Apple's native ecosystem.
 
-## Story 4.1: Cloud Storage Infrastructure
+## Story 4.1: SwiftData + CloudKit Integration
 
 As a developer,
-I want to implement time-series data storage,
-so that all rowing performance data is reliably persisted.
+I want to implement SwiftData with CloudKit synchronization,
+so that all rowing performance data is reliably persisted and synchronized.
 
 ### Acceptance Criteria
-1: ClickHouse database provisioned on AWS
-2: Optimized schema for rowing time-series data
-3: Data ingestion service handles high-volume writes
-4: Partitioning strategy for efficient queries
-5: Data retention policies configured
-6: Backup and recovery procedures documented
-7: Performance testing with 100+ concurrent streams
-8: Monitoring and alerting configured
-9: Cost optimization for storage growth
+1: SwiftData @Model classes configured for all data entities
+2: CloudKit container configured for private database sync
+3: ModelContainer configured with CloudKit store
+4: Automatic schema migration support implemented
+5: Data model versioning strategy documented
+6: CloudKit sync conflicts resolution implemented
+7: Performance testing with 100+ concurrent local inserts
+8: CloudKit sync monitoring via OSLog
+9: iCloud account requirement handling
 
 ## Story 4.2: Offline Mode Implementation
 
@@ -26,50 +26,50 @@ I want my session data saved locally when offline,
 so that I don't lose workouts due to connectivity issues.
 
 ### Acceptance Criteria
-1: Local SQLite database for iOS app
-2: Session data cached during network outage
-3: Visual indicator shows offline mode active
-4: Queue system for pending uploads
-5: Automatic sync when connection restored
-6: Conflict resolution for overlapping data
-7: Storage limit management (purge old cached data)
-8: Manual sync trigger option
-9: Sync progress indicator
-10: Tests verify no data loss scenarios
+1: SwiftData local storage works offline by default
+2: Session data persisted locally during CloudKit outage
+3: CloudKit sync status indicator in UI
+4: SwiftData automatic retry for failed CloudKit sync
+5: Automatic sync when iCloud connection restored
+6: CloudKit conflict resolution using server record wins
+7: Local storage management via SwiftData automatic cleanup
+8: Manual sync trigger via CloudKit fetch operations
+9: Sync progress indicator using CloudKit operation progress
+10: Tests verify no data loss with airplane mode scenarios
 
-## Story 4.3: Data Synchronization Service
+## Story 4.3: Cross-Device Data Synchronization
 
-As a developer,
-I want reliable data synchronization between devices and cloud,
-so that all data is eventually consistent.
-
-### Acceptance Criteria
-1: Sync service handles batch uploads efficiently
-2: Deduplication prevents duplicate records
-3: Compression reduces bandwidth usage
-4: Retry logic for failed syncs
-5: Sync status webhooks for monitoring
-6: Delta sync for partial updates
-7: Rate limiting prevents overload
-8: Audit trail for sync operations
-9: Performance metrics tracked
-
-## Story 4.4: Session Data API
-
-As a developer,
-I want RESTful and GraphQL APIs for session data,
-so that clients can query historical performance.
+As an athlete,
+I want my data synchronized across all my Apple devices,
+so that I can access my rowing history anywhere.
 
 ### Acceptance Criteria
-1: GraphQL schema for flexible queries
-2: REST endpoints for common operations
-3: Pagination for large result sets
-4: Filtering by date, athlete, metrics
-5: Aggregation queries (averages, totals)
-6: Response caching for performance
-7: API documentation auto-generated
-8: Rate limiting per API key
-9: Query performance <200ms for common requests
+1: CloudKit handles automatic batch sync efficiently
+2: SwiftData @Attribute(.unique) prevents duplicate records
+3: CloudKit compression reduces bandwidth usage automatically
+4: CloudKit automatic retry logic for failed operations
+5: CloudKit sync status monitoring via CKSyncEngine (iOS 17+)
+6: CloudKit delta sync for partial updates automatically
+7: CloudKit rate limiting handled automatically
+8: CloudKit operation audit via OSLog
+9: CloudKit sync metrics tracked via CloudKit Console
+
+## Story 4.4: SwiftData Query Interface
+
+As a developer,
+I want SwiftData @Query interface for session data,
+so that UI can efficiently query historical performance.
+
+### Acceptance Criteria
+1: @Query predicates for flexible data filtering
+2: SwiftData relationships for common operations
+3: FetchDescriptor with limits for large result sets
+4: Predicate filtering by date, athlete, metrics
+5: Aggregate calculations using Swift reduce operations
+6: Local query caching via SwiftData automatically
+7: SwiftData query documentation with examples
+8: @Query performance optimizations with indexes
+9: Query performance <100ms for common local requests
 
 ## Story 4.5: Data Export Capabilities
 
@@ -78,12 +78,12 @@ I want to export session data,
 so that I can perform additional analysis in external tools.
 
 ### Acceptance Criteria
-1: Export individual sessions as CSV
-2: Bulk export for date ranges
-3: Include all PM5 metrics in export
-4: Formatted for Excel compatibility
-5: Export queue for large requests
-6: Email notification when ready
-7: Temporary download links (24 hour expiry)
-8: Export audit trail
-9: Rate limiting to prevent abuse
+1: Export individual sessions as CSV using SwiftData queries
+2: Bulk export for date ranges via @Query predicates
+3: Include all PM5 metrics from SwiftData models
+4: CSV formatted for Excel compatibility
+5: Background export using Swift concurrency
+6: Share sheet integration for exporting files
+7: Files app integration for export management
+8: Export operations logged via OSLog
+9: Export frequency limits via UserDefaults tracking

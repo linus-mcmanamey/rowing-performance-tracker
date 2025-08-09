@@ -8,9 +8,10 @@
 import Foundation
 import CoreBluetooth
 import Combine
+import os
 
 @MainActor
-class PM5Controller: NSObject, ObservableObject {
+class PM5Controller: NSObject, ObservableObject, PM5ServiceProtocol {
     // MARK: - Published Properties
     @Published var isConnected = false
     @Published var isScanning = false
@@ -27,6 +28,7 @@ class PM5Controller: NSObject, ObservableObject {
     private var characteristics: [CBUUID: CBCharacteristic] = [:]
     private var sampleRate: UInt8 = PM5Constants.sampleRate500ms
     private var mockDataTimer: Timer?
+    private let logger = Logger(subsystem: "com.d_n_w.PM5", category: "PM5Controller")
     
     // Service references
     private var deviceInfoService: CBService?
@@ -162,7 +164,7 @@ class PM5Controller: NSObject, ObservableObject {
         case RowingCharacteristicUUIDs.endOfWorkoutSummary:
             if let summary = PM5DataParser.parseEndOfWorkoutSummary(data) {
                 // Handle workout end
-                print("Workout completed: \(summary.distance)m in \(summary.elapsedTime)s")
+                logger.info("Workout completed: \(summary.distance)m in \(summary.elapsedTime)s")
             }
             
         case RowingCharacteristicUUIDs.heartRateBeltInfo:
@@ -253,7 +255,7 @@ class PM5Controller: NSObject, ObservableObject {
         )
         
         startMockDataSimulation()
-        print("Mock PM5 mode enabled")
+        logger.info("Mock PM5 mode enabled")
     }
     
     /// Disable mock PM5 mode
@@ -262,7 +264,7 @@ class PM5Controller: NSObject, ObservableObject {
         stopMockMode()
         connectionState = .disconnected
         isConnected = false
-        print("Mock PM5 mode disabled")
+        logger.info("Mock PM5 mode disabled")
     }
     
     private func stopMockMode() {
@@ -288,7 +290,7 @@ class PM5Controller: NSObject, ObservableObject {
             elapsedTime: TimeInterval(elapsedTime),
             distance: Double(stroke * 10), // 10m per stroke
             workoutType: .justRowNoSplits,
-            intervalType: .none,
+            intervalType: nil,
             workoutState: .workoutRow,
             rowingState: .active,
             strokeState: .recovery,
@@ -373,16 +375,16 @@ extension PM5Controller: CBCentralManagerDelegate {
         Task { @MainActor in
             switch central.state {
             case .poweredOn:
-                print("Bluetooth is powered on")
+                logger.info("Bluetooth is powered on")
             case .poweredOff:
                 error = .bluetoothNotAvailable
-                print("Bluetooth is powered off")
+                logger.warning("Bluetooth is powered off")
             case .unauthorized:
                 error = .bluetoothNotAvailable
-                print("Bluetooth access unauthorized")
+                logger.warning("Bluetooth access unauthorized")
             case .unsupported:
                 error = .bluetoothNotAvailable
-                print("Bluetooth not supported")
+                logger.error("Bluetooth not supported")
             default:
                 break
             }
@@ -392,7 +394,7 @@ extension PM5Controller: CBCentralManagerDelegate {
     nonisolated func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
         Task { @MainActor in
             // DEBUG: Show all discovered devices
-            print("Discovered: \(peripheral.name ?? "Unknown") (RSSI: \(RSSI))")
+            logger.debug("Discovered: \(peripheral.name ?? "Unknown") (RSSI: \(RSSI))")
             
             // Check if this is a PM5 device - handle both "PM5" and "PM5 [number] Row" patterns
             if let name = peripheral.name {
@@ -402,7 +404,7 @@ extension PM5Controller: CBCentralManagerDelegate {
                 if isPM5 {
                     if !discoveredDevices.contains(peripheral) {
                         discoveredDevices.append(peripheral)
-                        print("Added PM5 device: \(name)")
+                        logger.info("Added PM5 device: \(name)")
                     }
                 }
             }
@@ -510,7 +512,7 @@ extension PM5Controller: CBPeripheralDelegate {
     nonisolated func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
         Task { @MainActor in
             if let error = error {
-                print("Write error: \(error)")
+                logger.error("Write error: \(error)")
                 self.error = .commandFailed
             }
         }
@@ -518,9 +520,9 @@ extension PM5Controller: CBPeripheralDelegate {
     
     nonisolated func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
         if let error = error {
-            print("Notification setup error: \(error)")
+            logger.error("Notification setup error: \(error)")
         } else {
-            print("Notifications enabled for \(characteristic.uuid)")
+            logger.debug("Notifications enabled for \(characteristic.uuid)")
         }
     }
 }
