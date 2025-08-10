@@ -316,21 +316,96 @@ log stream --predicate 'subsystem == "com.apple.bluetooth"'
 
 ## Testing Strategy
 
+### Running Tests Locally
+
+#### Quick Test Commands
+```bash
+# Navigate to project directory
+cd ios-app
+
+# Run all tests with coverage
+xcodebuild test -scheme d_n_w -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' -enableCodeCoverage YES
+
+# Run only unit tests
+xcodebuild test -scheme d_n_w -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' -only-testing d_n_wTests
+
+# Run specific test class
+xcodebuild test -scheme d_n_w -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' -only-testing d_n_wTests/PM5ServiceTests
+```
+
+#### SwiftLint Local Setup
+```bash
+# Install SwiftLint via Homebrew
+brew install swiftlint
+
+# Run SwiftLint checks
+swiftlint lint --path ios-app/d_n_w
+
+# Auto-fix style issues
+swiftlint lint --path ios-app/d_n_w --fix
+
+# Run strict mode (as used in CI)
+swiftlint lint --path ios-app/d_n_w --strict
+```
+
+#### Coverage Reports
+```bash
+# Generate coverage report
+xcodebuild test -scheme d_n_w -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' -enableCodeCoverage YES
+
+# View coverage in Xcode
+# Window → Organizer → Coverage Reports
+
+# Extract coverage percentage (requires xcov gem)
+gem install xcov
+xcov --scheme d_n_w --minimum_coverage_percentage 80
+```
+
+#### Using Mock PM5 Service
+The project includes a comprehensive mock PM5 service for testing without hardware:
+
+```swift
+// Example: Using MockPM5Service in tests
+let mockService = MockPM5Service()
+await mockService.startScanning()
+
+// Simulate device discovery
+let devices = await mockService.discoveredDevices
+XCTAssertEqual(devices.count, 1)
+
+// Connect to mock device
+await mockService.connect(to: devices.first!)
+XCTAssertTrue(mockService.isConnected)
+
+// Generate mock workout data
+await mockService.startMockDataGeneration()
+// Mock data will be published to subscribers
+```
+
+**📚 For detailed testing procedures, see:** [Local Testing Procedures](docs/local-testing-procedures.md)
+
 ### Unit Tests
 - **PM5Controller**: Connection management
 - **CSAFEProtocol**: Command parsing
 - **PM5DataParser**: Data conversion
 - **UI Components**: SwiftUI view testing
+- **MockPM5Service**: 17 comprehensive tests for mock functionality
 
 ### Integration Tests
 - **End-to-end BLE workflow**
 - **UI navigation flows**
 - **Data persistence**
+- **Mock mode switching**
 
 ### Device Testing
 - **iOS 15.0**: Minimum supported version
 - **iPhone 6S+**: Minimum hardware support
 - **iPad**: Verify tablet compatibility
+
+### Coverage Requirements
+- **Minimum**: 80% overall code coverage
+- **Critical Components**: 100% for PM5 service layer
+- **CI Enforcement**: Pipeline fails if coverage drops below threshold
 
 ## Build Configurations
 
