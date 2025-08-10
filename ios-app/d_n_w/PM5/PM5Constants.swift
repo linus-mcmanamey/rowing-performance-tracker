@@ -11,7 +11,10 @@ import CoreBluetooth
 struct PM5ServiceUUIDs {
     // Base UUID pattern: CE06XXXX-43E5-11E4-916C-0800200C9A66
     static func createUUID(_ shortId: String) -> CBUUID {
-        CBUUID(string: "CE06\(shortId)-43E5-11E4-916C-0800200C9A66")
+        guard !shortId.isEmpty && shortId.count == 4 && shortId.allSatisfy({ $0.isHexDigit }) else {
+            return CBUUID(string: "CE060000-43E5-11E4-916C-0800200C9A66")
+        }
+        return CBUUID(string: "CE06\(shortId)-43E5-11E4-916C-0800200C9A66")
     }
     
     // Core BLE Services
@@ -137,7 +140,6 @@ enum StrokeState: UInt8 {
 }
 
 enum IntervalType: UInt8 {
-    case none = 0
     case time = 1
     case distance = 2
     case rest = 3

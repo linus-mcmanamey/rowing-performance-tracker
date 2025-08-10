@@ -1,23 +1,23 @@
 # Epic 3: Coach Dashboard & Multi-Athlete Monitoring
 
-Create a comprehensive web-based dashboard enabling coaches to monitor multiple athletes simultaneously during training sessions. This epic delivers the core value proposition for coaches - real-time visibility into entire team performance with actionable insights.
+Create comprehensive iOS coach tools enabling coaches to monitor multiple athletes simultaneously during training sessions. This epic delivers the core value proposition for coaches - real-time visibility into entire team performance with actionable insights through native iOS apps with CloudKit data sharing.
 
-## Story 3.1: Web Dashboard Foundation
+## Story 3.1: Coach iOS App Foundation
 
 As a developer,
-I want to create the web dashboard infrastructure,
-so that coaches can access real-time data through their browsers.
+I want to create the coach-specific iOS app features,
+so that coaches can monitor athletes through their iOS devices.
 
 ### Acceptance Criteria
-1: React application created with TypeScript
-2: Responsive design works on laptop and desktop screens
-3: WebSocket connection established to real-time service
-4: Authentication integrated with coach login
-5: Basic layout with header, navigation, and main content area
-6: Dashboard accessible at app.rowingtracker.com
-7: Loading states for data fetching
-8: Error boundaries for component failures
-9: Cross-browser testing (Chrome, Safari, Firefox)
+1: Coach user role detection via CloudKit user data
+2: Team management interface for coach views
+3: CloudKit shared databases for coach-athlete data sharing
+4: Real-time data subscriptions via CloudKit push notifications
+5: Coach-specific navigation with athlete monitoring focus
+6: Landscape orientation optimized for monitoring multiple athletes
+7: Background app refresh for continuous monitoring
+8: Handoff support between coach's Apple devices
+9: Split-screen multitasking support on iPad
 
 ## Story 3.2: Real-time Athlete Grid View
 
@@ -26,16 +26,16 @@ I want to see all active athletes in a grid layout,
 so that I can monitor the entire team at once.
 
 ### Acceptance Criteria
-1: Grid displays all currently active athletes
+1: SwiftUI LazyVGrid displays all active team athletes
 2: Each cell shows athlete name, current watts, stroke rate, split
-3: Real-time updates with <1 second latency
-4: Visual indicators for connection status
-5: Cells color-coded by performance zones (optional)
+3: Real-time updates via CloudKit subscriptions <1 second latency
+4: Visual indicators for connection status using SF Symbols
+5: Cells color-coded by performance zones using SwiftUI
 6: Grid auto-sizes based on number of athletes
-7: Smooth animations for data updates
-8: Click athlete cell for detailed view
+7: Smooth SwiftUI animations for data updates
+8: Tap athlete cell for detailed view modal
 9: Empty cells for athletes not yet connected
-10: Sort options by name, performance metrics
+10: Sort options by name, performance metrics with @Query predicates
 
 ## Story 3.3: Team Session Management
 

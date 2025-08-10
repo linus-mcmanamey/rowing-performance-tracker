@@ -31,22 +31,26 @@ class PM5DataParser {
     
     // MARK: - General Status Parsing (0x0031)
     static func parseGeneralStatus(_ data: Data) -> GeneralStatus? {
-        guard data.count >= 19 else { return nil }
+        guard data.count >= 11 else { return nil }
         
         let elapsedTime = TimeInterval(parseUInt24(data, offset: 0)) / 100.0
         let distance = Double(parseUInt24(data, offset: 3)) / 10.0
         let workoutType = WorkoutType(rawValue: data[6]) ?? .justRowNoSplits
-        let intervalType = IntervalType(rawValue: data[7]) ?? .none
+        let intervalType = IntervalType(rawValue: data[7])
         let workoutState = WorkoutState(rawValue: data[8]) ?? .waitToBegin
         let rowingState = RowingState(rawValue: data[9]) ?? .inactive
         let strokeState = StrokeState(rawValue: data[10]) ?? .waitingForWheelToReachMinSpeed
-        let totalWorkDistance = Double(parseUInt24(data, offset: 11))
         
+        var totalWorkDistance: Double = 0.0
         var workoutDuration: TimeInterval?
         var workoutDurationType: UInt8?
         var dragFactor: UInt8?
         
-        if data.count >= 17 {
+        if data.count >= 14 {
+            totalWorkDistance = Double(parseUInt24(data, offset: 11))
+        }
+        
+        if data.count >= 18 {
             workoutDuration = TimeInterval(parseUInt24(data, offset: 14)) / 100.0
             workoutDurationType = data[17]
         }
@@ -130,8 +134,10 @@ class PM5DataParser {
         
         let elapsedTime = TimeInterval(parseUInt24(data, offset: 0)) / 100.0
         let distance = Double(parseUInt24(data, offset: 3)) / 10.0
+        
         let driveLength = Double(data[6]) / 100.0
         let driveTime = TimeInterval(data[7]) / 100.0
+        
         let recoveryTime = TimeInterval(parseUInt16(data, offset: 8)) / 100.0
         let strokeDistance = Double(parseUInt16(data, offset: 10)) / 100.0
         let peakDriveForce = Double(parseUInt16(data, offset: 12)) / 10.0
@@ -221,7 +227,7 @@ class PM5DataParser {
         let dragFactorAverage = data[15]
         let recoveryHeartRate = data[16]
         let workoutType = WorkoutType(rawValue: data[17]) ?? .justRowNoSplits
-        let averagePace = TimeInterval(parseUInt16(data, offset: 18)) / 10.0
+        let averagePace = TimeInterval(parseUInt16(data, offset: 18)) / 100.0
         
         return EndOfWorkoutSummary(
             logEntryDate: date,
@@ -271,19 +277,20 @@ extension PM5DataParser {
     // Convert watts to pace (seconds per 500m)
     static func wattsToPace(_ watts: Double) -> TimeInterval {
         guard watts > 0 else { return 0 }
-        return pow(2.8 / watts, 1.0 / 3.0) * 500.0
+        return pow(2.80 / watts, 1.0 / 3.0) * 500.0
     }
     
     // Convert pace to watts
     static func paceToWatts(_ pace: TimeInterval) -> Double {
         guard pace > 0 else { return 0 }
         let pacePerMeter = pace / 500.0
-        return 2.8 / pow(pacePerMeter, 3.0)
+        return 2.80 / pow(pacePerMeter, 3.0)
     }
     
     // Convert calories/hr to pace
     static func caloriesToPace(_ calories: Double) -> TimeInterval {
-        let watts = (calories - 300.0) / (4.0 * 0.8604)
+        guard calories > 300.0 else { return 0 }
+        let watts = (calories - 300.0) / 4.184
         return wattsToPace(watts)
     }
     

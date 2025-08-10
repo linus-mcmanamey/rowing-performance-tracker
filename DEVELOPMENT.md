@@ -2,6 +2,15 @@
 
 Complete guide for setting up the Rowing Performance Tracker development environment.
 
+## 🚨 **DEVELOPER PROTOCOL - READ FIRST**
+
+**⚠️ CRITICAL:** Before implementing ANY story, ALWAYS:
+1. **Check GitHub issue comments** for handoff notes and implementation instructions
+2. **Read the complete story document** in `docs/stories/` 
+3. **Review all issue comments** for validation results, context, and specific guidance
+
+**Never start coding without reading GitHub issue comments first!** The Scrum Master and Product Owner provide essential handoff instructions and validation context in issue comments.
+
 ## Prerequisites
 
 ### System Requirements
@@ -29,6 +38,144 @@ xcode-select --install  # Install command line tools if needed
 git clone https://github.com/linus-mcmanamey/rowing-performance-tracker.git
 cd rowing-performance-tracker
 ```
+
+### Project Links
+- **Repository**: https://github.com/linus-mcmanamey/rowing-performance-tracker
+- **Issues**: https://github.com/linus-mcmanamey/rowing-performance-tracker/issues
+- **Project Board**: https://github.com/users/linus-mcmanamey/projects/3
+
+## 🔧 **XCODE MCP SERVER REQUIREMENT**
+
+**⚠️ MANDATORY:** All developers and testers MUST use the Xcode MCP server for any Xcode operations:
+
+### Why Use Xcode MCP Server?
+- **Automated Build Management**: Handles complex build configurations
+- **Consistent Test Execution**: Standardized testing across environments
+- **Better Error Handling**: Provides detailed build and test feedback
+- **CI/CD Integration**: Essential for automated pipeline operations
+- **Cross-Platform Compatibility**: Works seamlessly with Claude Code IDE
+
+### Required Operations via MCP Server:
+- ✅ **Building projects**: Use MCP build commands instead of Xcode GUI
+- ✅ **Running tests**: Use MCP test commands for consistent results
+- ✅ **Device management**: Use MCP for simulator and device operations
+- ✅ **Code signing**: Use MCP for automated signing workflows
+- ✅ **Debugging**: Use MCP for structured debugging and logging
+
+### Setup Instructions:
+1. **Ensure Claude Code is installed** with Xcode MCP server enabled
+2. **Verify MCP server connection**: Run `mcp__XcodeBuildMCP__diagnostic` to confirm setup
+3. **Use MCP commands**: Always prefer MCP server commands over manual Xcode operations
+
+### Common MCP Commands for This Project:
+```bash
+# Discover projects and schemes
+mcp__XcodeBuildMCP__discover_projs
+mcp__XcodeBuildMCP__list_schems_proj
+
+# Build for simulator
+mcp__XcodeBuildMCP__build_sim_name_proj
+
+# Run tests
+mcp__XcodeBuildMCP__test_sim_name_proj
+
+# Build for device
+mcp__XcodeBuildMCP__build_dev_proj
+
+# Install and launch on device
+mcp__XcodeBuildMCP__install_app_device
+mcp__XcodeBuildMCP__launch_app_device
+```
+
+**❌ DO NOT:**
+- Use Xcode GUI for builds or tests in development workflow
+- Manually run xcodebuild commands
+- Rely on Xcode's built-in testing without MCP coordination
+
+**💡 Benefits:**
+- Consistent build environments across team
+- Automated error reporting and resolution
+- Integration with CI/CD pipeline
+- Better debugging and logging capabilities
+
+## 🐙 **GITHUB MCP SERVER REQUIREMENT**
+
+**⚠️ MANDATORY:** All agents and developers MUST use the GitHub MCP server for repository and project interactions:
+
+### Why Use GitHub MCP Server?
+- **Automated Repository Management**: Handles complex GitHub operations programmatically
+- **Consistent Issue/PR Workflow**: Standardized GitHub interactions across team
+- **Enhanced Error Handling**: Better feedback for GitHub API operations
+- **CI/CD Integration**: Essential for automated GitHub workflows
+- **Multi-Repository Support**: Seamless operations across multiple repositories
+
+### Required Operations via GitHub MCP Server:
+- ✅ **Repository Management**: Create, fork, search repositories
+- ✅ **Issue Management**: Create, update, comment on issues
+- ✅ **Pull Request Operations**: Create, review, merge, update PRs
+- ✅ **File Operations**: Read, write, update files in repositories
+- ✅ **Branch Management**: Create branches, manage branch operations
+- ✅ **Release Management**: Create and manage releases
+- ✅ **Search Operations**: Search across repositories, code, issues, users
+
+### Setup Instructions:
+1. **Ensure Claude Code is installed** with GitHub MCP server enabled
+2. **Configure GitHub authentication**: Ensure proper GitHub token is configured
+3. **Verify MCP server connection**: Test GitHub MCP operations
+4. **Use MCP commands**: Always prefer GitHub MCP commands over manual GitHub operations
+
+### GitHub Project Information:
+- **Repository Owner**: `linus-mcmanamey`
+- **Repository Name**: `rowing-performance-tracker`
+- **Issues URL**: https://github.com/linus-mcmanamey/rowing-performance-tracker/issues
+- **Project Board URL**: https://github.com/users/linus-mcmanamey/projects/3
+
+### Common GitHub MCP Commands for This Project:
+```bash
+# Repository operations
+mcp__github__get_file_contents --owner linus-mcmanamey --repo rowing-performance-tracker
+mcp__github__create_or_update_file --owner linus-mcmanamey --repo rowing-performance-tracker
+mcp__github__push_files --owner linus-mcmanamey --repo rowing-performance-tracker
+
+# Issue management (Issues: https://github.com/linus-mcmanamey/rowing-performance-tracker/issues)
+mcp__github__list_issues --owner linus-mcmanamey --repo rowing-performance-tracker
+mcp__github__create_issue --owner linus-mcmanamey --repo rowing-performance-tracker
+mcp__github__update_issue --owner linus-mcmanamey --repo rowing-performance-tracker
+mcp__github__add_issue_comment --owner linus-mcmanamey --repo rowing-performance-tracker
+mcp__github__get_issue --owner linus-mcmanamey --repo rowing-performance-tracker --issue_number <issue-number>
+
+# Pull request operations
+mcp__github__list_pull_requests --owner linus-mcmanamey --repo rowing-performance-tracker
+mcp__github__create_pull_request --owner linus-mcmanamey --repo rowing-performance-tracker
+mcp__github__get_pull_request --owner linus-mcmanamey --repo rowing-performance-tracker
+mcp__github__merge_pull_request --owner linus-mcmanamey --repo rowing-performance-tracker
+
+# Branch management
+mcp__github__create_branch --owner linus-mcmanamey --repo rowing-performance-tracker
+mcp__github__list_commits --owner linus-mcmanamey --repo rowing-performance-tracker
+
+# Search operations
+mcp__github__search_repositories --query "rowing performance tracker"
+mcp__github__search_code --q "PM5Controller repo:linus-mcmanamey/rowing-performance-tracker"
+mcp__github__search_issues --q "is:open repo:linus-mcmanamey/rowing-performance-tracker"
+
+# Project-specific searches
+mcp__github__search_issues --q "is:open repo:linus-mcmanamey/rowing-performance-tracker label:epic"
+mcp__github__search_issues --q "is:open repo:linus-mcmanamey/rowing-performance-tracker label:story"
+```
+
+**❌ DO NOT:**
+- Use manual GitHub web interface for programmatic operations
+- Use git commands for GitHub-specific operations (issues, PRs, releases)
+- Manually manage GitHub workflows that can be automated via MCP
+- Use curl or other manual API calls to GitHub when MCP commands exist
+
+**💡 Benefits:**
+- Consistent GitHub operations across all team members and agents
+- Automated error handling and retry logic
+- Structured data exchange with proper validation
+- Integration with development workflows and CI/CD
+- Better tracking and logging of GitHub operations
 
 ### 3. Open Project
 ```bash
@@ -87,30 +234,42 @@ d_n_wUITests/            # UI tests
 
 ### Development Workflow
 
-#### 1. Feature Development
+#### 1. Feature Development (with GitHub MCP Integration)
 ```bash
-# Create feature branch
+# Create feature branch (can use GitHub MCP for remote branch creation)
 git checkout -b feature/your-feature-name
+
+# Alternative: Create branch via GitHub MCP
+mcp__github__create_branch --owner linus-mcmanamey --repo rowing-performance-tracker --branch feature/your-feature-name
 
 # Make changes and test
 # Commit with clear messages
 git add .
 git commit -m "feat: add new feature description"
 
-# Push and create PR
+# Push branch
 git push origin feature/your-feature-name
+
+# ✅ REQUIRED: Create PR via GitHub MCP (NOT manual GitHub web interface)
+mcp__github__create_pull_request --owner linus-mcmanamey --repo rowing-performance-tracker --title "Your Feature Title" --head feature/your-feature-name --base main --body "Feature description"
 ```
 
-#### 2. Testing
+#### 2. Testing (via Xcode MCP Server)
 ```bash
-# Run all tests
-Cmd+U in Xcode
+# ✅ REQUIRED: Use MCP server for all testing
+# Run all tests on simulator
+mcp__XcodeBuildMCP__test_sim_name_proj --projectPath ios-app/d_n_w.xcodeproj --scheme d_n_w --simulatorName "iPhone 15"
 
-# Run specific test suite
-xcodebuild test -scheme d_n_w -destination 'platform=iOS Simulator,name=iPhone 15'
+# Run tests on specific device
+mcp__XcodeBuildMCP__test_device_proj --projectPath ios-app/d_n_w.xcodeproj --scheme d_n_w --deviceId <device-uuid>
 
-# Test on device (requires physical iOS device)
-xcodebuild test -scheme d_n_w -destination 'platform=iOS,id=<device-udid>'
+# List available devices
+mcp__XcodeBuildMCP__list_devices
+mcp__XcodeBuildMCP__list_sims
+
+# ❌ DEPRECATED: Manual testing commands (DO NOT USE)
+# Cmd+U in Xcode
+# xcodebuild test commands
 ```
 
 #### 3. Code Quality
@@ -157,21 +316,96 @@ log stream --predicate 'subsystem == "com.apple.bluetooth"'
 
 ## Testing Strategy
 
+### Running Tests Locally
+
+#### Quick Test Commands
+```bash
+# Navigate to project directory
+cd ios-app
+
+# Run all tests with coverage
+xcodebuild test -scheme d_n_w -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' -enableCodeCoverage YES
+
+# Run only unit tests
+xcodebuild test -scheme d_n_w -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' -only-testing d_n_wTests
+
+# Run specific test class
+xcodebuild test -scheme d_n_w -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' -only-testing d_n_wTests/PM5ServiceTests
+```
+
+#### SwiftLint Local Setup
+```bash
+# Install SwiftLint via Homebrew
+brew install swiftlint
+
+# Run SwiftLint checks
+swiftlint lint --path ios-app/d_n_w
+
+# Auto-fix style issues
+swiftlint lint --path ios-app/d_n_w --fix
+
+# Run strict mode (as used in CI)
+swiftlint lint --path ios-app/d_n_w --strict
+```
+
+#### Coverage Reports
+```bash
+# Generate coverage report
+xcodebuild test -scheme d_n_w -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' -enableCodeCoverage YES
+
+# View coverage in Xcode
+# Window → Organizer → Coverage Reports
+
+# Extract coverage percentage (requires xcov gem)
+gem install xcov
+xcov --scheme d_n_w --minimum_coverage_percentage 80
+```
+
+#### Using Mock PM5 Service
+The project includes a comprehensive mock PM5 service for testing without hardware:
+
+```swift
+// Example: Using MockPM5Service in tests
+let mockService = MockPM5Service()
+await mockService.startScanning()
+
+// Simulate device discovery
+let devices = await mockService.discoveredDevices
+XCTAssertEqual(devices.count, 1)
+
+// Connect to mock device
+await mockService.connect(to: devices.first!)
+XCTAssertTrue(mockService.isConnected)
+
+// Generate mock workout data
+await mockService.startMockDataGeneration()
+// Mock data will be published to subscribers
+```
+
+**📚 For detailed testing procedures, see:** [Local Testing Procedures](docs/local-testing-procedures.md)
+
 ### Unit Tests
 - **PM5Controller**: Connection management
 - **CSAFEProtocol**: Command parsing
 - **PM5DataParser**: Data conversion
 - **UI Components**: SwiftUI view testing
+- **MockPM5Service**: 17 comprehensive tests for mock functionality
 
 ### Integration Tests
 - **End-to-end BLE workflow**
 - **UI navigation flows**
 - **Data persistence**
+- **Mock mode switching**
 
 ### Device Testing
 - **iOS 15.0**: Minimum supported version
 - **iPhone 6S+**: Minimum hardware support
 - **iPad**: Verify tablet compatibility
+
+### Coverage Requirements
+- **Minimum**: 80% overall code coverage
+- **Critical Components**: 100% for PM5 service layer
+- **CI Enforcement**: Pipeline fails if coverage drops below threshold
 
 ## Build Configurations
 
@@ -305,8 +539,10 @@ refactor: code cleanup
 - [PM5 BLE Specification](docs/PM5_BLE_Implementation.md)
 
 ### Community
-- [GitHub Discussions](https://github.com/linus-mcmanamey/rowing-performance-tracker/discussions)
-- [Issues Tracker](https://github.com/linus-mcmanamey/rowing-performance-tracker/issues)
+- **Repository**: https://github.com/linus-mcmanamey/rowing-performance-tracker
+- **Issues Tracker**: https://github.com/linus-mcmanamey/rowing-performance-tracker/issues
+- **Project Board**: https://github.com/users/linus-mcmanamey/projects/3
+- **Discussions**: https://github.com/linus-mcmanamey/rowing-performance-tracker/discussions
 
 ---
 
